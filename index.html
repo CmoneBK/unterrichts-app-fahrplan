@@ -148,6 +148,9 @@ input:focus,textarea:focus{outline:2px solid var(--mark);border-color:transparen
 .howto summary{cursor:pointer;font-weight:700}
 .howto[open] summary{margin-bottom:10px}
 .howto-list{list-style:decimal!important;padding-left:1.4em!important;display:grid;gap:8px!important}
+.howto-h{margin:14px 0 6px;font:700 1rem var(--f-display);color:var(--c)}
+.howto summary+.howto-h{margin-top:0}
+.say{font-style:italic}
 .howto-ex{font-size:.9rem;color:var(--muted);margin-top:10px!important}
 
 /* faq */
@@ -525,6 +528,7 @@ dialog img{display:block;max-width:96vw;max-height:90vh;width:auto;height:auto;b
     <p>Im Repository unter <b>Settings → Pages</b> die Veröffentlichung einschalten. Nach kurzer Zeit ist die App unter einer festen Adresse wie <code>name.github.io/app</code> erreichbar, ohne den „Open Sandbox“-Button von CodeSandbox. Im kostenlosen Konto funktioniert das für öffentliche Repositorys.</p>
     <details class="howto">
       <summary>Schritt für Schritt: Repository anlegen, Datei hochladen, Pages einschalten</summary>
+      <h4 class="howto-h">Variante A: von Hand im Browser</h4>
       <ol class="howto-list">
         <li><b>Konto:</b> Auf <a href="https://github.com/signup" target="_blank" rel="noopener">github.com/signup</a> ein kostenloses Konto anlegen bzw. einloggen.</li>
         <li><b>Neues Repository:</b> Oben rechts auf <b>+</b> klicken, dann auf <b>New repository</b>.</li>
@@ -534,6 +538,20 @@ dialog img{display:block;max-width:96vw;max-height:90vh;width:auto;height:auto;b
         <li><b>Pages einschalten:</b> Oben im Repository auf <b>Settings</b> klicken, links auf <b>Pages</b>. Unter <i>Build and deployment</i> bei <b>Source</b> die Option <b>Deploy from a branch</b> wählen. Bei <b>Branch</b> <code>main</code> und <code>/ (root)</code> einstellen und auf <b>Save</b> klicken.</li>
         <li><b>Warten und öffnen:</b> Nach ein bis zwei Minuten erscheint oben auf der Pages-Seite „Your site is live at …“ mit der Adresse, z. B. <code>https://name.github.io/ohmsches-gesetz/</code>. Diesen Link bekommt die Klasse.</li>
         <li><b>Später ändern:</b> Im Repository auf <code>index.html</code> klicken, dann auf das Stift-Symbol (<b>Edit</b>), den Code ersetzen und mit <b>Commit changes</b> speichern. Nach ein bis zwei Minuten ist die neue Version online, die alte bleibt unter <b>History</b> abrufbar.</li>
+      </ol>
+      <h4 class="howto-h">Variante B: live aus Claude</h4>
+      <p>Statt Dateien von Hand hochzuladen, kann Claude selbst mit GitHub arbeiten: Claude schreibt die App, lädt sie ins Repository und übernimmt jede Änderung direkt. So ist diese Anleitung entstanden.</p>
+      <ol class="howto-list">
+        <li><b>Repository anlegen:</b> wie oben in Schritt 1 bis 3, aber ohne Datei. Ein neues Repository kann Claude nicht selbst erstellen.</li>
+        <li><b>Claude verbinden:</b> Im Claude-Chat schreiben: <span class="say">„Verbinde dich mit meinem GitHub-Repo <i>name/ohmsches-gesetz</i> und lade die App dort als index.html hoch.“</span> Beim ersten Mal den GitHub-Zugriff erlauben, wenn Claude danach fragt.</li>
+        <li><b>Pages einschalten:</b> einmalig selbst wie in Schritt 6. Diese Einstellung kann Claude nicht übernehmen.</li>
+        <li><b>Live weiterarbeiten:</b> Ab jetzt Änderungen einfach im Chat beschreiben und um das Hochladen bitten:
+          <ul class="chips">
+            <li>„Mach die Buttons größer und lade es hoch.“</li>
+            <li>„Füge 5 schwerere Aufgaben hinzu und aktualisiere GitHub.“</li>
+            <li>„Mach die letzte Änderung rückgängig.“</li>
+          </ul>
+          Claude ändert die Datei, speichert sie als neue Version im Repository, und nach ein bis zwei Minuten sieht die Klasse unter demselben Link die neue Fassung.</li>
       </ol>
       <p class="howto-ex">Beispiel: Diese Anleitung selbst liegt so unter <a href="https://github.com/CmoneBK/unterrichts-app-fahrplan" target="_blank" rel="noopener">github.com/CmoneBK/unterrichts-app-fahrplan</a>.</p>
     </details>
