@@ -153,6 +153,14 @@ input:focus,textarea:focus{outline:2px solid var(--mark);border-color:transparen
 .say{font-style:italic}
 .howto-ex{font-size:.9rem;color:var(--muted);margin-top:10px!important}
 
+/* collapse done steps */
+.collapse-done .step.done:not(.peek)>:not(.dot):not(.step-head){display:none}
+.collapse-done .step.done:not(.peek){padding-block:14px 0}
+.collapse-done .step.done h3{cursor:pointer}
+.collapse-done .step.done:not(.peek) h3::after{content:" · anzeigen";font:400 .8rem var(--f-body);color:var(--muted)}
+.collapse-done .step.done.peek h3::after{content:" · einklappen";font:400 .8rem var(--f-body);color:var(--muted)}
+.fold{white-space:nowrap}
+
 /* faq */
 .faq{margin-top:48px;display:grid;gap:10px}
 .faq h2{font-size:1.6rem;margin-bottom:6px}
@@ -189,7 +197,7 @@ dialog img{display:block;max-width:96vw;max-height:90vh;width:auto;height:auto;b
     <a class="leg" href="#phase-e" style="--c:var(--legE)"><b>E · Konzept</b><span>Ideen für weitere Apps</span></a>
     <a class="leg" href="#phase-f" style="--c:var(--legF)"><b>F · Ausblick</b><span>Profi-Weg mit Claude und GitHub</span></a>
   </nav>
-  <div class="progress"><span id="count">0 von 12 erledigt</span><div class="bar"><i id="barfill"></i></div></div>
+  <div class="progress"><span id="count">0 von 12 erledigt</span><div class="bar"><i id="barfill"></i></div><label class="check fold"><input type="checkbox" id="collapse"> Erledigte einklappen</label></div>
   <p class="legend">Die orangefarbenen Nummern <span class="n">1</span> in den Screenshots gehören zu den Nummern im Text. Bilder lassen sich zum Vergrößern anklicken.</p>
 </header>
 
@@ -646,7 +654,7 @@ Stelle die Apps zuerst in einer kurzen Übersichtstabelle dar. Schreibe noch kei
     tabs.forEach(o=>{const on=o===t;o.setAttribute('aria-selected',on);document.getElementById(o.getAttribute('aria-controls')).hidden=!on});
   }));
   // Progress
-  const boxes=[...document.querySelectorAll('.check input')];
+  const boxes=[...document.querySelectorAll('.step .check input')];
   let saved={};try{saved=JSON.parse(localStorage.getItem('appfahrplan')||'{}')}catch(e){}
   function upd(){
     const n=boxes.filter(b=>b.checked).length;
@@ -657,6 +665,15 @@ Stelle die Apps zuerst in einer kurzen Übersichtstabelle dar. Schreibe noch kei
     try{localStorage.setItem('appfahrplan',JSON.stringify(st))}catch(e){}
   }
   boxes.forEach(b=>{b.checked=!!saved[b.id];b.addEventListener('change',upd)}); upd();
+  // Erledigte einklappen
+  const col=$('#collapse');
+  try{col.checked=localStorage.getItem('appfahrplan-collapse')==='1'}catch(e){}
+  function applyCol(){document.body.classList.toggle('collapse-done',col.checked);try{localStorage.setItem('appfahrplan-collapse',col.checked?'1':'0')}catch(e){}}
+  col.addEventListener('change',applyCol); applyCol();
+  document.querySelectorAll('.step h3').forEach(h=>h.addEventListener('click',()=>{
+    const st=h.closest('.step'); if(st.classList.contains('done')&&document.body.classList.contains('collapse-done'))st.classList.toggle('peek');
+  }));
+  boxes.forEach(b=>b.addEventListener('change',()=>b.closest('.step').classList.remove('peek')));
   // Lightbox
   const lb=$('#lb'),li=$('#lbimg');
   document.querySelectorAll('figure button').forEach(bt=>bt.addEventListener('click',()=>{
