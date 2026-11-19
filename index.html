@@ -51,7 +51,7 @@ header{padding-block:48px 28px;display:grid;gap:18px}
 h1{font-size:clamp(2rem,5.5vw,3.4rem);font-weight:800;letter-spacing:-.02em}
 h1 em{font-style:normal;color:var(--mark)}
 .lead{max-width:62ch;color:var(--muted);margin:0}
-.legs{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-top:6px}
+.legs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:6px}
 .leg{display:grid;gap:2px;text-decoration:none;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-top:5px solid var(--c);border-radius:10px;padding:12px 14px}
 .leg b{font-family:var(--f-display);font-size:1.05rem}
 .leg span{font-size:.85rem;color:var(--muted)}
@@ -167,6 +167,13 @@ input:focus,textarea:focus{outline:2px solid var(--mark);border-color:transparen
 .hbody{min-width:0}
 .collapse-done .hstep.done:not(.peek){padding-block:6px!important}
 .hstep.done h3{color:var(--muted)}
+
+.askfold{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:20;width:min(560px,calc(100vw - 32px));background:var(--surface);color:var(--ink);border:1px solid var(--line);border-top:5px solid var(--ok);border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.25);padding:14px 16px;display:grid;gap:10px}
+.askfold p{margin:0;font-size:.95rem}
+.askbtns{display:flex;gap:8px;flex-wrap:wrap}
+.askbtns button{font:700 .92rem var(--f-body);border-radius:8px;padding:8px 14px;cursor:pointer;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
+#askyes{background:var(--ok);border-color:var(--ok);color:#fff}
+.askbtns button:focus-visible{outline:3px solid var(--mark);outline-offset:2px}
 
 /* faq */
 .faq{margin-top:48px;display:grid;gap:10px}
@@ -584,6 +591,10 @@ dialog img{display:block;max-width:96vw;max-height:90vh;width:auto;height:auto;b
 </section>
 </div>
 
+<div id="askfold" class="askfold" role="dialog" aria-labelledby="askt" hidden>
+  <p id="askt"><b>Erledigte Schritte einklappen?</b> Abgehakte Schritte schrumpfen dann auf ihre Überschrift, und die Anleitung wird kürzer. Das lässt sich oben jederzeit wieder ändern.</p>
+  <div class="askbtns"><button type="button" id="askyes">Ja, einklappen</button><button type="button" id="askno">Nein, danke</button></div>
+</div>
 <dialog id="lb" aria-label="Vergrößerter Screenshot"><img id="lbimg" alt=""></dialog>
 
 <script>
@@ -694,6 +705,14 @@ Stelle die Apps zuerst in einer kurzen Übersichtstabelle dar. Schreibe noch kei
     const st=h.closest('.step'); if(st.classList.contains('done')&&document.body.classList.contains('collapse-done'))st.classList.toggle('peek');
   }));
   boxes.forEach(b=>b.addEventListener('change',()=>b.closest('.step').classList.remove('peek')));
+  // Einmalige Nachfrage beim ersten Abhaken
+  const ask=$('#askfold');
+  let asked=false;try{asked=localStorage.getItem('appfahrplan-asked')==='1'}catch(e){}
+  function closeAsk(){ask.hidden=true;asked=true;try{localStorage.setItem('appfahrplan-asked','1')}catch(e){}}
+  boxes.forEach(b=>b.addEventListener('change',()=>{if(b.checked&&!col.checked&&!asked){ask.hidden=false;$('#askyes').focus()}}));
+  $('#askyes').addEventListener('click',()=>{col.checked=true;applyCol();closeAsk()});
+  $('#askno').addEventListener('click',closeAsk);
+  col.addEventListener('change',()=>{if(!ask.hidden)closeAsk()});
   // Lightbox
   const lb=$('#lb'),li=$('#lbimg');
   document.querySelectorAll('figure button').forEach(bt=>bt.addEventListener('click',()=>{
