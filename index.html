@@ -160,6 +160,15 @@ input:focus,textarea:focus{outline:2px solid var(--mark);border-color:transparen
 .collapse-done .step.done:not(.peek) h3::after{content:" · anzeigen";font:400 .8rem var(--f-body);color:var(--muted)}
 .collapse-done .step.done.peek h3::after{content:" · einklappen";font:400 .8rem var(--f-body);color:var(--muted)}
 .fold{white-space:nowrap}
+.sub-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.sub-head h3{font-size:1.02rem;margin:0}
+.sbody{display:grid;gap:10px;min-width:0}
+.collapse-done .sstep.done:not(.peek) .sbody{display:none}
+.collapse-done .sstep.done h3{cursor:pointer}
+.collapse-done .sstep.done:not(.peek) h3::after{content:" · anzeigen";font:400 .8rem var(--f-body);color:var(--muted)}
+.collapse-done .sstep.done.peek h3::after{content:" · einklappen";font:400 .8rem var(--f-body);color:var(--muted)}
+.sstep.done .sn{background:var(--ok)}
+.sstep.done h3{color:var(--muted)}
 .howto-list{list-style:none!important;padding-left:0!important}
 .hstep{padding-block:6px!important;gap:6px!important;border-bottom:1px solid var(--line)}
 .hstep:last-child{border-bottom:0}
@@ -600,6 +609,21 @@ dialog img{display:block;max-width:96vw;max-height:90vh;width:auto;height:auto;b
 <script>
 (function(){
   const $=s=>document.querySelector(s);
+  // Teilschritte a/b/c in Schritt 4 abhakbar machen
+  document.querySelectorAll('.panel').forEach(pan=>{
+    pan.querySelectorAll('.sub>li').forEach((li,j)=>{
+      const div=li.querySelector(':scope>div'); if(!div)return;
+      const b=div.querySelector(':scope>b');
+      const head=document.createElement('div');head.className='sub-head';
+      const h=document.createElement('h3');h.textContent=b?b.textContent.replace(/[.:]\s*$/,''):'Teilschritt';if(b)b.remove();
+      const lab=document.createElement('label');lab.className='check';
+      const cb=document.createElement('input');cb.type='checkbox';cb.id='cs-'+pan.id+'-'+j;cb.dataset.alt='1';
+      lab.append(cb,' erledigt');head.append(h,lab);
+      const body=document.createElement('div');body.className='sbody';
+      while(div.firstChild)body.appendChild(div.firstChild);
+      div.append(head,body);li.classList.add('sstep');
+    });
+  });
   // Anleitungsschritte in F3 abhakbar machen
   document.querySelectorAll('.howto-list').forEach((ol,li_i)=>{
     [...ol.children].forEach((li,j)=>{
@@ -691,7 +715,7 @@ Stelle die Apps zuerst in einer kurzen Übersichtstabelle dar. Schreibe noch kei
     const n=main.filter(b=>b.checked).length;
     $('#count').textContent=n+' von '+main.length+' erledigt';
     $('#barfill').style.width=(n/main.length*100)+'%';
-    boxes.forEach(b=>b.closest('.step').classList.toggle('done',b.checked));
+    boxes.forEach(b=>b.closest('.sstep,.step').classList.toggle('done',b.checked));
     const st={};boxes.forEach(b=>st[b.id]=b.checked);
     try{localStorage.setItem('appfahrplan',JSON.stringify(st))}catch(e){}
   }
@@ -702,9 +726,9 @@ Stelle die Apps zuerst in einer kurzen Übersichtstabelle dar. Schreibe noch kei
   function applyCol(){document.body.classList.toggle('collapse-done',col.checked);try{localStorage.setItem('appfahrplan-collapse',col.checked?'1':'0')}catch(e){}}
   col.addEventListener('change',applyCol); applyCol();
   document.querySelectorAll('.step h3').forEach(h=>h.addEventListener('click',()=>{
-    const st=h.closest('.step'); if(st.classList.contains('done')&&document.body.classList.contains('collapse-done'))st.classList.toggle('peek');
+    const st=h.closest('.sstep,.step'); if(st.classList.contains('done')&&document.body.classList.contains('collapse-done'))st.classList.toggle('peek');
   }));
-  boxes.forEach(b=>b.addEventListener('change',()=>b.closest('.step').classList.remove('peek')));
+  boxes.forEach(b=>b.addEventListener('change',()=>b.closest('.sstep,.step').classList.remove('peek')));
   // Einmalige Nachfrage beim ersten Abhaken
   const ask=$('#askfold');
   let asked=false;try{asked=localStorage.getItem('appfahrplan-asked')==='1'}catch(e){}
