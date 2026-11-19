@@ -144,6 +144,12 @@ input:focus,textarea:focus{outline:2px solid var(--mark);border-color:transparen
 .cmp thead th:last-child{color:var(--c)}
 .cmp tbody th{font-weight:700;white-space:nowrap;color:var(--muted)}
 
+.howto{background:var(--surface);border:1px solid var(--line);border-left:5px solid var(--c);border-radius:10px;padding:12px 16px;max-width:76ch}
+.howto summary{cursor:pointer;font-weight:700}
+.howto[open] summary{margin-bottom:10px}
+.howto-list{list-style:decimal!important;padding-left:1.4em!important;display:grid;gap:8px!important}
+.howto-ex{font-size:.9rem;color:var(--muted);margin-top:10px!important}
+
 /* faq */
 .faq{margin-top:48px;display:grid;gap:10px}
 .faq h2{font-size:1.6rem;margin-bottom:6px}
@@ -517,6 +523,20 @@ dialog img{display:block;max-width:96vw;max-height:90vh;width:auto;height:auto;b
     <div class="dot">F3</div>
     <div class="step-head"><h3>Mit GitHub Pages veröffentlichen</h3></div>
     <p>Im Repository unter <b>Settings → Pages</b> die Veröffentlichung einschalten. Nach kurzer Zeit ist die App unter einer festen Adresse wie <code>name.github.io/app</code> erreichbar, ohne den „Open Sandbox“-Button von CodeSandbox. Im kostenlosen Konto funktioniert das für öffentliche Repositorys.</p>
+    <details class="howto">
+      <summary>Schritt für Schritt: Repository anlegen, Datei hochladen, Pages einschalten</summary>
+      <ol class="howto-list">
+        <li><b>Konto:</b> Auf <a href="https://github.com/signup" target="_blank" rel="noopener">github.com/signup</a> ein kostenloses Konto anlegen bzw. einloggen.</li>
+        <li><b>Neues Repository:</b> Oben rechts auf <b>+</b> klicken, dann auf <b>New repository</b>.</li>
+        <li><b>Einstellungen:</b> Bei <b>Repository name</b> einen Namen ohne Leerzeichen eintragen, z. B. <code>ohmsches-gesetz</code>. <b>Public</b> wählen, sonst nichts ankreuzen. Dann auf <b>Create repository</b> klicken.</li>
+        <li><b>Datei hochladen:</b> Auf der Seite des leeren Repositorys auf den Link <b>uploading an existing file</b> klicken. Die HTML-Datei aus dem Download-Ordner ins Fenster ziehen oder über <b>choose your files</b> auswählen.<br><span class="warnline" style="color:var(--muted)">Wichtig: Die Datei muss <code>index.html</code> heißen. Eine Datei aus Fobizz (z. B. <i>bewerbungscoach.html</i>) vorher umbenennen.</span></li>
+        <li><b>Speichern:</b> Unten auf den grünen Button <b>Commit changes</b> klicken. Damit ist die erste Version gespeichert.</li>
+        <li><b>Pages einschalten:</b> Oben im Repository auf <b>Settings</b> klicken, links auf <b>Pages</b>. Unter <i>Build and deployment</i> bei <b>Source</b> die Option <b>Deploy from a branch</b> wählen. Bei <b>Branch</b> <code>main</code> und <code>/ (root)</code> einstellen und auf <b>Save</b> klicken.</li>
+        <li><b>Warten und öffnen:</b> Nach ein bis zwei Minuten erscheint oben auf der Pages-Seite „Your site is live at …“ mit der Adresse, z. B. <code>https://name.github.io/ohmsches-gesetz/</code>. Diesen Link bekommt die Klasse.</li>
+        <li><b>Später ändern:</b> Im Repository auf <code>index.html</code> klicken, dann auf das Stift-Symbol (<b>Edit</b>), den Code ersetzen und mit <b>Commit changes</b> speichern. Nach ein bis zwei Minuten ist die neue Version online, die alte bleibt unter <b>History</b> abrufbar.</li>
+      </ol>
+      <p class="howto-ex">Beispiel: Diese Anleitung selbst liegt so unter <a href="https://github.com/CmoneBK/unterrichts-app-fahrplan" target="_blank" rel="noopener">github.com/CmoneBK/unterrichts-app-fahrplan</a>.</p>
+    </details>
   </article>
 
   <div class="tip warn"><b>Vor dem Einsatz klären:</b> Claude und GitHub sind keine von der Schule bereitgestellten Dienste. Die Schüler kommen damit nicht in Berührung, sie öffnen nur den Link. Trotzdem gilt wie immer: keine Schülerdaten in die KI und keine personenbezogenen Daten in die App.</div>
